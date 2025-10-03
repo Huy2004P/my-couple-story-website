@@ -566,33 +566,34 @@
   }
 
 
-  // Nạp dữ liệu từ /data/stories.json lần đầu nếu localStorage đang trống
-  // Nạp dữ liệu từ /data/stories.json lần đầu nếu localStorage đang trống
-  async function bootstrapFromJSONOnce() {
-    // Chỉ bootstrap khi CHƯA có stories; confession có/không đều nạp được
-    if (getData().length) return;
-    try {
-      const res = await fetch('data/stories.json', { cache: 'no-store' });
-      if (!res.ok) return;
-      const payload = await res.json();
+  // Nạp dữ liệu từ /data/stories.json lần đầu (stories khi trống, confession khi thiếu)
+async function bootstrapFromJSONOnce() {
+  const needStories  = getData().length === 0;     // album trống?
+  const needConfess  = !getConfession();           // chưa có lời tỏ tình?
 
-      // Hỗ trợ 2 định dạng:
-      // 1) Legacy: [...stories]
-      // 2) Mới:    { stories: [...], confession: {text, date} }
-      if (Array.isArray(payload)) {
-        setData(payload); // CHỈ stories
-      } else if (payload && typeof payload === 'object') {
-        if (Array.isArray(payload.stories)) setData(payload.stories);
-        if (payload.confession) setConfession(payload.confession); // Lời tỏ tình RIÊNG
-      }
+  if (!needStories && !needConfess) return;        // có đủ rồi thì thôi
 
-      renderStories(); renderTimeline(); renderManager?.(); loadConfess?.();
-      console.log('Seeded from data/stories.json');
-    } catch (e) {
-      console.warn('Cannot bootstrap stories.json:', e);
+  try {
+    const res = await fetch('data/stories.json', { cache: 'no-store' });
+    if (!res.ok) return;
+    const payload = await res.json();
+
+    if (Array.isArray(payload)) {
+      // file kiểu cũ: chỉ có mảng stories
+      if (needStories) setData(payload);
+    } else if (payload && typeof payload === 'object') {
+      // file kiểu mới: { stories: [...], confession: {...} }
+      if (needStories && Array.isArray(payload.stories)) setData(payload.stories);
+      if (needConfess && payload.confession) setConfession(payload.confession);
     }
+
+    renderStories(); renderTimeline(); renderManager?.(); loadConfess?.();
+    console.log('Seeded from data/stories.json (stories/confession as needed)');
+  } catch (e) {
+    console.warn('Cannot bootstrap stories.json:', e);
   }
-  window.addEventListener('load', bootstrapFromJSONOnce);
+}
+window.addEventListener('load', bootstrapFromJSONOnce);
 
 
 
