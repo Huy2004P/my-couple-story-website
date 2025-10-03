@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Our Story – Couple One‑Page</title>
+  <meta name="description" content="Couple website: album kỷ niệm, câu chuyện theo từng ảnh và timeline tình yêu." />
+  <style>
+    :root{
+      --bg:#0f1115;         /* nền tối sang */
+      --card:#151821;       /* thẻ */
+      --muted:#8ea0b5;
+      --text:#e9eef6;
+      --accent:#ff6fa8;     /* hồng nhẹ */
+      --accent-2:#8bd3ff;   /* xanh nhẹ */
+      --radius:18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text); background: radial-gradient(1200px 600px at 10% -10%, #182033, transparent 60%),
+                         radial-gradient(900px 500px at 90% 0%, #26172a, transparent 55%),
+                         var(--bg);
+      overflow-x:hidden;
+    }
+    a{ color:inherit; text-decoration:none }
+    .container{ width:min(1200px, 92vw); margin:0 auto }
+
+    /* ---------- Header ---------- */
+    header{
+      position:sticky; top:0; z-index:20; backdrop-filter: blur(10px);
+      background:linear-gradient(to bottom, rgba(15,17,21,.9), rgba(15,17,21,.6));
+      border-bottom:1px solid rgba(255,255,255,.06)
+    }
+    .nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 0 }
+    .brand{ display:flex; align-items:center; gap:10px }
+    .brand .dot{ width:10px; height:10px; border-radius:50%; background:linear-gradient(120deg,var(--accent),var(--accent-2)) }
+    .brand h1{ font-size:18px; margin:0; font-weight:700; letter-spacing:.5px }
+    .nav a{ opacity:.85 }
+    .nav .menu{ display:flex; gap:18px }
+    /* .btn{ border:1px solid rgba(255,255,255,.14); padding:8px 14px; border-radius:999px; display:inline-flex; gap:8px; align-items:center } */
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: normal;          /* cho phép xuống dòng */
+      line-height: 1.2;
+      padding: 10px 12px;
+      min-height: 44px;             /* nút cao đều nhau */
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, #1b2130, #131823);
+      box-shadow: 0 6px 20px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 600;
+      opacity: .95;
+      transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease, background .2s ease;
+    }
+    .btn:hover{
+      opacity: 1;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .btn:active{ transform: translateY(0); }
+
+    /* ---------- Hero ---------- */
+    .hero{ position:relative; padding:80px 0 50px }
+    .hero-wrap{ display:grid; grid-template-columns: 1.1fr .9fr; gap:28px; align-items:center }
+    .hero h2{ font-size:44px; line-height:1.1; margin:0 0 10px }
+    .hero p.lead{ color:var(--muted); font-size:18px; margin:0 0 18px }
+    .tags{ display:flex; gap:10px; flex-wrap:wrap }
+    .tag{ padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.12); font-size:13px; opacity:.9 }
+    .hero-card{
+      position:relative; height:360px; border-radius:26px; overflow:hidden; box-shadow:var(--shadow);
+      background:#000; isolation:isolate
+    }
+    .hero-card img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(1.1) contrast(1.05) }
+    .hero-card::after{ content:""; position:absolute; inset:auto 0 0 0; height:60%;
+      background:linear-gradient(to top, rgba(15,17,21,.9), transparent 60%) }
+    .floating-date{
+      position:absolute; left:18px; bottom:18px; padding:10px 14px; border-radius:12px;
+      background:rgba(20,22,28,.75); border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(6px); font-weight:600
+    }
+
+    /* ---------- Stories Grid ---------- */
+    section{ padding:42px 0 }
+    .section-title{ display:flex; align-items:center; gap:10px; margin-bottom:18px }
+    .section-title h3{ margin:0; font-size:22px }
+    .stories{ display:grid; grid-template-columns: repeat(12, 1fr); gap:16px }
+    .card{ grid-column: span 4; position:relative; background:var(--card); border-radius:var(--radius);
+           overflow:hidden; box-shadow:var(--shadow); cursor:pointer; transform: translateZ(0) }
+    .card.tall{ grid-column: span 5 }
+    .card.wide{ grid-column: span 7 }
+    .card img{ width:100%; height:300px; object-fit:cover; display:block; transition: transform .5s ease }
+
+    /* keep full image visible; no black bar text */
+    .card .overlay{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:16px; gap:6px; pointer-events:none }
+    .overlay .glass{ background: rgba(20,22,28,.35); border:1px solid rgba(255,255,255,.12); backdrop-filter: blur(8px);
+      padding:12px 14px; border-radius:14px; opacity:0; transform: translateY(8px) rotateX(10deg); transform-origin: bottom; transition: all .45s ease }
+    .overlay h4{ margin:0; font-size:18px }
+    .overlay p{ margin:2px 0 0; color:var(--muted); font-size:14px; line-height:1.5; max-height:0; overflow:hidden; transition:max-height .45s ease }
+
+    /* "book open" feel */
+    .card::before{ content:""; position:absolute; inset:0; background:linear-gradient(100deg, rgba(255,255,255,.14), transparent 30%);
+      mix-blend-mode:overlay; opacity:.0; transition:opacity .4s ease }
+    .card:hover::before{ opacity:.35 }
+    .card:hover img{ transform: scale(1.06) }
+    .card:hover .overlay .glass{ opacity:1; transform: translateY(0) rotateX(0) }
+    .card:hover .overlay p{ max-height:140px }
+
+    /* ---------- Timeline ---------- */
+    .timeline{ position:relative; margin:20px 0 0; padding-left:20px }
+    .timeline::before{ content:""; position:absolute; left:10px; top:0; bottom:0; width:2px; background: linear-gradient(var(--accent), var(--accent-2)) }
+    .tl-item{ position:relative; margin:20px 0 24px; padding-left:26px }
+    .tl-item .dot{ position:absolute; left:-1px; top:4px; width:12px; height:12px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(255,111,168,.18) }
+    .tl-card{ background:var(--card); border-radius:16px; padding:14px 16px; border:1px solid rgba(255,255,255,.08); box-shadow:var(--shadow) }
+    .tl-card h4{ margin:0 0 6px; font-size:16px }
+    .tl-card p{ margin:0; color:var(--muted); font-size:14px }
+
+    /* ---------- Lightbox ---------- */
+    .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:40 }
+    .lightbox.open{ display:flex }
+    .lightbox img{ max-width:92vw; max-height:82vh; border-radius:16px; box-shadow:var(--shadow) }
+
+    /* ---------- Floating controls ---------- */
+    .fab{ position: fixed; right:18px; bottom:18px; display:flex; gap:10px; z-index:30 }
+    .icon-btn{ width:46px; height:46px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg, #1d2330, #141823);
+      border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); cursor:pointer }
+
+    /* ---------- Admin Panel ---------- */
+    .panel{ position:fixed; right:18px; bottom:78px; width:min(420px, 92vw); background:var(--card); border:1px solid rgba(255,255,255,.12);
+      border-radius:16px; padding:16px; box-shadow:var(--shadow); display:none; z-index:35 }
+    .panel.open{ display:block }
+    .panel h4{ margin:0 0 10px }
+    .panel label{ display:block; font-size:13px; color:#cbd6e4; margin:10px 0 6px }
+    .panel input, .panel textarea{ width:100%; background:#0f131b; color:var(--text); border:1px solid rgba(255,255,255,.12);
+      border-radius:10px; padding:10px 12px; font:inherit }
+    .panel .row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px }
+    /* .panel .actions{ display:flex; gap:10px; margin-top:12px } */
+    .panel .actions{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    /* .btn-primary{ background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0e1116; font-weight:700; border:none } */
+    /* Nút chính (Lưu) nổi bật hơn */
+    .btn-primary{
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #0e1116;
+      border: none;
+      box-shadow: 0 10px 28px rgba(255,111,168,.25);
+    }
+    .btn-primary:hover{
+      box-shadow: 0 12px 34px rgba(255,111,168,.35);
+    }
+
+    /* Panel tổng thể: nếu cao quá thì cuộn nội dung */
+    .panel{
+      max-height: calc(100vh - 120px);
+      overflow: auto;
+    }
+
+    /* Canvas nền, nằm dưới nội dung */
+    #bgCanvas{
+      position:fixed; inset:0;
+      width:100vw; height:100vh;
+      pointer-events:none;
+      z-index:1; /* dưới header/panel (z>20,35) */
+    }
+
+    /* === Confession Section === */
+    .confess{
+      padding: 36px 0 24px;
+      background:
+        radial-gradient(700px 300px at 90% 0, rgba(255,111,168,.08), transparent 60%),
+        radial-gradient(700px 300px at 10% 0, rgba(139,211,255,.08), transparent 60%);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .confess-wrap{ display:flex; justify-content:center }
+    .confess-card,.confess-editor{
+      width:min(820px, 92vw);
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+    .confess-card h3,.confess-editor h3{ margin:0 0 8px }
+    .confess-card p{ margin:4px 0 8px; font-size:16px; line-height:1.65 }
+    .confess-card .muted{ color:var(--muted) }
+    .confess-meta{ color:var(--muted); font-size:12px }
+    .confess-actions{ /*display:flex; gap:10px; marin-top:8px*/ display: none; }
+    .confess-editor textarea{
+      width:100%; background:#0f131b; color:var(--text);
+      border:1px solid rgba(255,255,255,.12); border-radius:12px;
+      padding:12px; font:inherit
+    }
+    .editor-row{ display:flex; align-items:center; justify-content:space-between; margin-top:8px }
+    .small{ color:var(--muted); font-size:12px }
+
+
+    /* === Video Section === */
+.video-sec{ padding: 24px 0 8px }
+.video-frame{
+  position: relative;
+  width: min(980px, 92vw);
+  margin: 0 auto 10px;
+  border-radius: 22px;
+  overflow: hidden;
+  background:#000;
+  box-shadow: 0 20px 50px rgba(0,0,0,.4);
+  border: 1px solid rgba(255,255,255,.06);
+  isolation:isolate;
+}
+
+/* viền gradient phát sáng */
+.video-frame::before{
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius: 24px;
+  padding:2px;
+  background: linear-gradient(135deg, rgba(255,111,168,.9), rgba(139,211,255,.9));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity:.65; filter: blur(0.2px);
+  z-index:-1;
+  animation: ringGlow 4s linear infinite;
+}
+@keyframes ringGlow{
+  0%{ opacity:.45 } 50%{ opacity:.8 } 100%{ opacity:.45 }
+}
+
+.video-inner{
+  position:relative; width:100%;
+  aspect-ratio: 16 / 9;
+  background: radial-gradient(600px 300px at 80% -10%, rgba(139,211,255,.12), transparent 60%),
+              radial-gradient(600px 300px at 20% 110%, rgba(255,111,168,.12), transparent 60%),
+              #000;
+}
+.video-inner video,
+.video-inner iframe{
+  position:absolute; inset:0; width:100%; height:100%;
+  display:block; object-fit:cover; border:0;
+}
+
+.video-caption{
+  padding: 10px 14px;
+  text-align:center;
+  font-size:14px; color: var(--muted);
+  background: linear-gradient(to top, rgba(255,255,255,.03), transparent);
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.video-controls{
+  /* width:min(980px, 92vw);
+  margin: 8px auto 0;
+  display:grid; grid-template-columns: 1fr auto auto auto;
+  gap:10px; */
+  display: none;
+}
+.video-controls input{
+  width:100%; background:#0f131b; color:var(--text);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px; padding:10px 12px; font:inherit;
+}
+.file-btn{ cursor:pointer }
+.video-hint{
+  /* width:min(980px, 92vw);
+  margin: 6px auto 0; color:var(--muted); font-size:12px; */
+  display: none;
+}
+
+
+
+
+
+    /* ---------- Footer ---------- */
+    footer{ padding:28px 0 40px; color:var(--muted); text-align:center }
+
+    /* ---------- Responsive ---------- */
+
+    @media (max-width: 720px){
+  .video-controls{ grid-template-columns: 1fr 1fr; }
+}
+    /* Mobile tối ưu lưới nút */
+    @media (max-width: 640px){
+      .panel .actions{
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+      }
+    }
+    @media (max-width: 960px){
+      .hero-wrap{ grid-template-columns: 1fr; }
+      .card{ grid-column: span 6 }
+      .card.wide{ grid-column: span 12 }
+      .card.tall{ grid-column: span 6 }
+    }
+    @media (max-width: 640px){
+      .card{ grid-column: span 12 }
+      .hero h2{ font-size:34px }
+      .hero-card{ height:280px }
+      .stories{ gap:12px }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="dot"></div>
+        <h1>Forever Us 💞</h1>
+      </div>
+      <nav class="menu">
+        <a href="#stories" class="btn">Album kỷ niệm</a>
+        <a href="#timeline" class="btn">Timeline</a>
+        <a href="#confess" class="btn">Lời tỏ tình thật lòng</a>
+        <a href="#footer" class="btn">Lời nhắn</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-wrap">
+      <div>
+        <h2>終わりがあっても、愛は続く。
+            Even if it ends, love remains.</h2>
+        <p class="lead">Những kỉ niệm được gói ghém trong ảnh, trong lời, trong những ngày yêu thương đã qua.
+                        Mỗi tấm hình là một trang nhật ký, mỗi dòng chữ là một tiếng lòng.</p>
+        <div class="tags">
+          <span class="tag">Started • 14/02/2024</span>
+          <span class="tag">2 năm kỷ niệm</span>
+          <span class="tag">#HaTien #CoffeeDates #Graduation</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <img src="Anh/z7076616322103_b5066486ff32c3dd6664841cc1a7a804.jpg" alt="Couple banner"/>
+        <div class="floating-date">14 Tháng 5 Năm 2023 • Ngày Bắt Đầu</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stories">
+    <div class="container">
+      <div class="section-title">
+        <h3>✨ Câu chuyện theo ảnh</h3>
+      </div>
+      <div class="stories" id="storiesGrid">
+        <!-- Cards will be injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 🎬 KHOẢNH KHẮC VIDEO -->
+<section id="videoMoment" class="video-sec">
+  <div class="container">
+    <div class="section-title">
+      <h3>🎬 Khoảnh khắc của tụi mình</h3>
+    </div>
+
+    <!-- khung video -->
+    <div class="video-frame">
+      <!-- dùng <video> cho mp4, webm… hoặc auto nhúng iframe nếu bạn dán link YouTube/Vimeo -->
+      <div class="video-inner" id="videoInner">
+        <video id="loveVideo" autoplay muted loop playsinline preload="metadata" poster="" style="display:none"></video>
+      </div>
+      <div class="video-caption" id="videoCaption">Một đoạn phim nhỏ lưu lại kỷ niệm của hai đứa 💙</div>
+    </div>
+
+    <!-- điều khiển nguồn video -->
+    <div class="video-controls">
+      <input id="videoUrl" placeholder="Dán link YouTube/Vimeo hoặc .mp4 (vd: video/love.mp4)" />
+      <button class="btn btn-primary" id="saveVideoUrl">Lưu link</button>
+      <label class="file-btn btn">
+        <input id="videoFile" type="file" accept="video/*" hidden />
+        Chọn file từ máy
+      </label>
+      <button class="btn" id="clearVideo">Xoá nguồn</button>
+    </div>
+    <p class="video-hint">Tip: Bạn có thể bỏ file vào thư mục <code>video/love.mp4</code> rồi dán đường dẫn đó vào ô trên để lưu vĩnh viễn (localStorage).</p>
+  </div>
+</section>
+
+
+  <section id="timeline">
+    <div class="container">
+      <div class="section-title"><h3>🗓 Timeline yêu thương</h3></div>
+      <div class="timeline" id="timelineList">
+        <!-- Timeline items by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 💌 LỜI TỎ TÌNH -->
+<section id="confess" class="confess">
+  <div class="container">
+    <div class="confess-wrap">
+      <!-- View -->
+      <div class="confess-card" id="confessView">
+        <h3>💌 Xin phép được tỏ tình nè!</h3>
+        <p id="confessText" class="muted">Chưa có lời nào… bấm “Chỉnh sửa” để viết nha.</p>
+        <div class="confess-meta"><span id="confessDate"></span></div>
+        <div class="confess-actions">
+          <button class="btn" id="confessEditBtn">Chỉnh sửa</button>
+          <button class="btn btn-primary" id="confessShareBtn">Sao chép</button>
+        </div>
+      </div>
+      <!-- Editor -->
+      <div class="confess-editor" id="confessEditor" style="display:none">
+        <h3>💌 Viết lời tỏ tình</h3>
+        <textarea id="confessInput" rows="6" placeholder="Viết những điều muốn nói…"></textarea>
+        <div class="editor-row">
+          <span class="small" id="confessCount">0 ký tự</span>
+          <div class="confess-actions">
+            <button class="btn" id="confessCancelBtn">Huỷ</button>
+            <button class="btn btn-primary" id="confessSaveBtn">Lưu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <footer id="footer">
+    <div class="container">
+      <p>Đi bên cậu, mỗi bước chân là một dòng kỉ niệm, mỗi ánh nhìn là một câu chuyện không cần nói thành lời.</p>
+      <p style="margin-top:6px">© <span id="year"></span> Our Story — Huy & Trí · Made with love ❤︎</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <img alt="preview" />
+  </div>
+
+  <!-- Floating Controls -->
+  <div class="fab">
+    <button class="icon-btn" id="btnMusic" title="Nhạc nền">🎵</button>
+    <button class="icon-btn" id="btnPanel" title="Thêm câu chuyện">⚙️</button>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="panel" id="panel">
+    <h4>Thêm câu chuyện mới</h4>
+    <div class="row">
+      <div>
+        <label>Tiêu đề</label>
+        <input id="titleInput" placeholder="VD: Chuyến đi Hà Tiên"/>
+      </div>
+      <div>
+        <label>Ngày</label>
+        <input id="dateInput" type="date"/>
+      </div>
+    </div>
+    <label>Ảnh (URL)</label>
+    <input id="imageInput" placeholder="https://...jpg (hoặc để trống nếu bạn tải từ máy)"/>
+    <label>Hoặc tải ảnh từ máy</label>
+    <input id="fileInput" type="file" accept="image/*" />
+    <label>Câu chuyện</label>
+    <textarea id="storyInput" rows="4" placeholder="Viết vài dòng kỷ niệm..."></textarea>
+    <div class="actions">
+      <button class="btn btn-primary" id="saveBtn">Lưu vào Album</button>
+      <button class="btn" id="updateBtn" style="display:none">Cập nhật mục</button>
+      <button class="btn" id="clearBtn">Xoá tất cả (local)</button>
+      <button class="btn" id="loadDemoBtn">Nạp dữ liệu mẫu</button>
+      <button class="btn" id="clearSeedBtn">Xoá dữ liệu mẫu</button>
+      <button class="btn" id="exportBtn">Xuất JSON</button>
+      <button class="btn" id="importBtn">Nhập JSON</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" />
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,.08); margin:14px 0"/>
+    <h4>Quản lý câu chuyện</h4>
+    <div id="manageList" style="max-height:240px; overflow:auto; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:8px"></div>
+
+    <p style="color:var(--muted); font-size:12px; margin-top:8px">* Dữ liệu lưu ở trình duyệt (localStorage). Không cần server.</p>
+  </div>
+
+  <!-- <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2d7b7f0b3a.mp3?filename=relaxing-ballad-112199.mp3" type="audio/mpeg">
+  </audio> -->
+  <!-- thay thẻ audio cũ -->
+  <audio id="bgm" preload="auto" autoplay playsinline webkit-playsinline></audio>
+
+
+  <script>
+  // ===== Helpers (DOM, date, id) =====
+  const $  = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+  const makeId = () => (crypto?.getRandomValues
+    ? (crypto.getRandomValues(new Uint32Array(1))[0].toString(36)+Date.now().toString(36))
+    : (Math.random().toString(36).slice(2)+Date.now().toString(36)));
+
+  function formatDate(s){
+    try {
+      const d = new Date(s);
+      return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric'});
+    } catch { return s; }
+  }
+
+  // ===== Image compress (for uploads) =====
+  function dataURLBytes(dataURL){
+    try {
+      const base64 = dataURL.split(',')[1] || '';
+      const pad = (base64.match(/=+$/)||[''])[0].length;
+      return (base64.length * 3) / 4 - pad;
+    } catch { return dataURL.length; }
+  }
+  async function compressImageFile(file, {maxW=1600,maxH=1600,quality=0.82,targetMax=2.3*1024*1024}={}){
+    const dataURL = await new Promise((res,rej)=>{
+      const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej('Không đọc được ảnh'); fr.readAsDataURL(file);
+    });
+    const img = await new Promise((res,rej)=>{
+      const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej('Không tải được ảnh'); im.src=dataURL;
+    });
+    const ratio = Math.min(maxW/img.width, maxH/img.height, 1);
+    const w = Math.round(img.width*ratio), h = Math.round(img.height*ratio);
+    const canvas = document.createElement('canvas'); canvas.width=w; canvas.height=h;
+    const ctx = canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+    const qList = [quality,0.75,0.7,0.6,0.5,0.4];
+    for(const q of qList){
+      const out = canvas.toDataURL('image/jpeg', q);
+      if(dataURLBytes(out) <= targetMax) return out;
+    }
+    return canvas.toDataURL('image/jpeg', 0.35);
+  }
+
+  // ===== Demo data (chỉ nạp khi bạn bấm nút) =====
+  const seedStories = [
+    {_seed:true, id: makeId(), title:'Chuyến đi Hà Tiên', date:'2024-08-20', image:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop', story:'Lần đầu đi xa cùng nhau, biển và gió cõng tiếng cười. Em bảo sóng giống tim mình – cứ xô nhưng vẫn dịu.'},
+    {_seed:true, id: makeId(), title:'Tỏ tình',            date:'2024-02-14', image:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1600&auto=format&fit=crop', story:'Một bó hồng, hai bàn tay run, ba nhịp thở ngập ngừng rồi em gật đầu.'},
+    {_seed:true, id: makeId(), title:'Cà phê chiều mưa',   date:'2024-06-05', image:'https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1600&auto=format&fit=crop', story:'Quán nhỏ góc phố, tiếng mưa rơi. Em khuấy ly đường còn anh khuấy tim mình.'},
+    {_seed:true, id: makeId(), title:'Tốt nghiệp cùng nhau',date:'2025-07-15', image:'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1600&auto=format&fit=crop', story:'Khoảnh khắc đội mũ cử nhân, chúng mình hẹn nhau đi tiếp con đường dài hơn.'}
+  ];
+
+  // ===== Storage =====
+  function getData(){
+    const raw = localStorage.getItem('coupleStories');
+    try { return raw ? JSON.parse(raw) : []; } catch { return []; }
+  }
+  function setData(list){
+    const withId = list.map(it => it.id ? it : ({...it, id: makeId()}));
+    localStorage.setItem('coupleStories', JSON.stringify(withId));
+  }
+
+  // Nạp dữ liệu từ /data/stories.json lần đầu nếu localStorage đang trống
+async function bootstrapFromJSONOnce() {
+  if (getData().length) return; // đã có dữ liệu local thì bỏ qua
+  try {
+    const res = await fetch('data/stories.json', { cache: 'no-store' });
+    if (!res.ok) return;
+    const arr = await res.json();
+    if (Array.isArray(arr) && arr.length) {
+      setData(arr);
+      renderStories(); renderTimeline(); renderManager?.();
+      console.log('Seeded from data/stories.json');
+    }
+  } catch (e) {
+    console.warn('Cannot bootstrap stories.json:', e);
+  }
+}
+window.addEventListener('load', bootstrapFromJSONOnce);
+
+
+  // ===== Render: Stories Grid =====
+  function renderStories(){
+    const list = getData();
+    const grid = document.getElementById('storiesGrid');
+    grid.innerHTML = '';
+    list
+      .slice()
+      .sort((a,b)=> new Date(b.date) - new Date(a.date))
+      .forEach((item, idx)=>{
+        const colClass = idx % 5 === 0 ? 'wide' : (idx % 3 === 0 ? 'tall' : '');
+        const card = document.createElement('article');
+        card.className = `card ${colClass}`.trim();
+        card.innerHTML = `
+          <img src="${item.image}" alt="${item.title}">
+          <div class="overlay">
+            <div class="glass">
+              <h4>${item.title}</h4>
+              <p>${formatDate(item.date)} — ${item.story}</p>
+            </div>
+          </div>
+        `;
+        card.addEventListener('click', ()=> openLightbox(item.image, item.title));
+        grid.appendChild(card);
+      });
+  }
+
+  // ===== Render: Timeline =====
+  function renderTimeline(){
+    const list = getData().slice().sort((a,b)=> new Date(a.date) - new Date(b.date));
+    const wrap = document.getElementById('timelineList');
+    wrap.innerHTML = '';
+    list.forEach(item=>{
+      const el = document.createElement('div');
+      el.className = 'tl-item';
+      el.innerHTML = `
+        <div class="dot"></div>
+        <div class="tl-card">
+          <h4>${formatDate(item.date)} · ${item.title}</h4>
+          <p>${item.story}</p>
+        </div>
+      `;
+      wrap.appendChild(el);
+    });
+    renderManager();
+  }
+
+  // ===== Lightbox =====
+  const lb = document.getElementById('lightbox');
+  function openLightbox(src, alt){
+    lb.classList.add('open');
+    const img = lb.querySelector('img');
+    img.src = src; img.alt = alt || '';
+  }
+  lb.addEventListener('click', ()=> lb.classList.remove('open'));
+
+  // ===== Panel + CRUD =====
+  let editId = null;
+
+  function fillForm(item){
+    document.getElementById('titleInput').value = item.title || '';
+    document.getElementById('dateInput').value  = item.date  || '';
+    document.getElementById('imageInput').value = (item.image && item.image.startsWith('data:')) ? '' : (item.image || '');
+    document.getElementById('storyInput').value = item.story || '';
+  }
+
+  function renderManager(){
+    const box  = document.getElementById('manageList');
+    const list = getData().slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
+    if(!list.length){ box.innerHTML = '<div style="color:#9fb0c6; font-size:13px">Chưa có câu chuyện nào.</div>'; return; }
+
+    box.innerHTML = list.map(it=>{
+      const seedMark = it._seed ? '<span style="font-size:11px; opacity:.7"> · demo</span>' : '';
+      return `
+        <div style="display:flex; align-items:center; gap:10px; padding:6px 4px; border-bottom:1px solid rgba(255,255,255,.06)">
+          <div style="width:84px; font-size:12px; opacity:.8">${formatDate(it.date)}</div>
+          <div style="flex:1">${it.title}${seedMark}</div>
+          <button class="btn" data-act="edit" data-id="${it.id}">Sửa</button>
+          <button class="btn" data-act="del"  data-id="${it.id}">Xoá</button>
+        </div>
+      `;
+    }).join('');
+
+    box.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const id  = e.currentTarget.getAttribute('data-id');
+        const act = e.currentTarget.getAttribute('data-act');
+        const list2 = getData();
+        const item = list2.find(x => x.id === id);
+        if(!item) return;
+
+        if(act === 'edit'){
+          editId = id; fillForm(item);
+          document.getElementById('updateBtn').style.display = 'inline-flex';
+          document.getElementById('saveBtn').style.display   = 'none';
+        } else if (act === 'del'){
+          if(confirm('Xoá mục này?')){
+            setData(list2.filter(x => x.id !== id));
+            renderStories(); renderTimeline(); renderManager();
+          }
+        }
+      });
+    });
+  }
+
+  document.getElementById('btnPanel').addEventListener('click', ()=>{
+    document.getElementById('panel').classList.toggle('open');
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', async ()=>{
+    const title = document.getElementById('titleInput').value.trim();
+    const date  = document.getElementById('dateInput').value;
+    const story = document.getElementById('storyInput').value.trim();
+    const fileEl= document.getElementById('fileInput');
+    const file  = fileEl && fileEl.files ? fileEl.files[0] : null;
+    let image   = document.getElementById('imageInput').value.trim();
+
+    if(file){
+      if(file.size > 15*1024*1024) { alert('Ảnh lớn hơn 15MB — hãy chọn ảnh nhẹ hơn.'); return; }
+      try { image = await compressImageFile(file); }
+      catch(err){ alert(err || 'Không xử lý được ảnh tải lên'); return; }
+    }
+
+    if(!title || !date || !image || !story){
+      alert('Điền đầy đủ: Tiêu đề, Ngày, Ảnh (URL hoặc tải từ máy), Câu chuyện'); return;
+    }
+
+    const list = getData();
+    list.push({ id: makeId(), title, date, image, story });
+    setData(list);
+    renderStories(); renderTimeline(); renderManager();
+
+    ['titleInput','dateInput','imageInput','storyInput'].forEach(id=> document.getElementById(id).value = '');
+    if(fileEl) fileEl.value = '';
+  });
+
+  document.getElementById('updateBtn').addEventListener('click', async ()=>{
+    if(!editId){ alert('Chưa chọn mục để sửa.'); return; }
+
+    const title = document.getElementById('titleInput').value.trim();
+    const date  = document.getElementById('dateInput').value;
+    const story = document.getElementById('storyInput').value.trim();
+    const fileEl= document.getElementById('fileInput');
+    const file  = fileEl && fileEl.files ? fileEl.files[0] : null;
+    let image   = document.getElementById('imageInput').value.trim();
+
+    if(file){
+      if(file.size > 15*1024*1024) { alert('Ảnh lớn hơn 15MB — hãy chọn ảnh nhẹ hơn.'); return; }
+      try { image = await compressImageFile(file); }
+      catch(err){ alert(err || 'Không xử lý được ảnh tải lên'); return; }
+    }
+
+    if(!title || !date || (!image && !file) || !story){
+      alert('Điền đủ thông tin trước khi cập nhật.'); return;
+    }
+
+    const list = getData();
+    const idx  = list.findIndex(x => x.id === editId);
+    if(idx === -1){ alert('Không tìm thấy mục để sửa.'); return; }
+
+    list[idx] = { ...list[idx], title, date, story, image: image || list[idx].image };
+    setData(list);
+    renderStories(); renderTimeline(); renderManager();
+
+    editId = null;
+    document.getElementById('updateBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display   = 'inline-flex';
+    ['titleInput','dateInput','imageInput','storyInput'].forEach(id=> document.getElementById(id).value = '');
+    if(fileEl) fileEl.value = '';
+  });
+
+  // ===== Clear / Seed =====
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    if(confirm('Xoá toàn bộ dữ liệu hiện tại? (Album TRỐNG)')){
+      setData([]); renderStories(); renderTimeline(); renderManager();
+    }
+  });
+  document.getElementById('loadDemoBtn').addEventListener('click', ()=>{
+    if(confirm('Nạp dữ liệu mẫu? (Ghi đè album hiện tại)')){
+      setData(seedStories.slice()); renderStories(); renderTimeline(); renderManager();
+    }
+  });
+  document.getElementById('clearSeedBtn').addEventListener('click', ()=>{
+    const list = getData();
+    const remain = list.filter(x => !x._seed);
+    if(remain.length === list.length){ alert('Không thấy mục demo nào để xoá.'); return; }
+    if(confirm('Xoá toàn bộ dữ liệu mẫu?')){
+      setData(remain); renderStories(); renderTimeline(); renderManager();
+    }
+  });
+
+  // ===== Export / Import JSON =====
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  URL.revokeObjectURL(url); a.remove();
+}
+
+// Tạo tên file theo thời gian
+function makeFilename(prefix='couple-stories'){
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
+  return `${prefix}-${stamp}.json`;
+}
+
+// Xuất JSON
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const data = getData();
+  if(!data.length){ alert('Album đang trống, không có gì để xuất.'); return; }
+  downloadJSON(data, makeFilename());
+});
+
+// Nhập JSON (mặc định hỏi Replace hay Merge)
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  document.getElementById('importFile').value = '';
+  document.getElementById('importFile').click();
+});
+
+document.getElementById('importFile').addEventListener('change', async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+
+  try{
+    const text = await file.text();
+    const arr = JSON.parse(text);
+
+    if(!Array.isArray(arr)) throw new Error('File JSON không đúng định dạng (không phải mảng).');
+
+    // Validate sơ bộ và gán id nếu thiếu
+    const cleaned = arr.map((it, i) => {
+      if(!it || typeof it !== 'object') throw new Error(`Phần tử thứ ${i+1} không hợp lệ.`);
+      const { title, date, image, story } = it;
+      if(!title || !date || !image || !story)
+        throw new Error(`Thiếu field ở phần tử thứ ${i+1} (cần: title, date, image, story).`);
+      return { _seed: !!it._seed, id: it.id || (Math.random().toString(36).slice(2)+Date.now().toString(36)), title, date, image, story };
+    });
+
+    const modeReplace = confirm('Nhập JSON:\nOK = GHI ĐÈ album hiện tại (Replace)\nCancel = GỘP vào album (Merge)');
+    if(modeReplace){
+      setData(cleaned);
+    }else{
+      // Merge theo id; nếu JSON không có id, coi như item mới
+      const now = getData();
+      const map = new Map(now.map(x => [x.id, x]));
+      cleaned.forEach(x => map.set(x.id, x)); // overwrite by id
+      setData([...map.values()]);
+    }
+
+    renderStories(); renderTimeline(); renderManager();
+    alert('Nhập dữ liệu thành công!');
+  }catch(err){
+    console.error(err);
+    alert('Không thể nhập JSON: ' + (err?.message || err));
+  }
+});
+
+  // === Confession: load / edit / save ===
+function loadConfess(){
+  const raw = localStorage.getItem('confession');
+  if(!raw){
+    $('#confessText').textContent = 'Chưa có lời nào… bấm “Chỉnh sửa” để viết nha.';
+    $('#confessDate').textContent = '';
+    return;
+  }
+  const obj = JSON.parse(raw);
+  $('#confessText').innerHTML = (obj.text || '').replace(/\n/g,'<br>');
+  // $('#confessDate').textContent = obj.date ? `Cập nhật: ${formatDate(obj.date)}` : '';
+}
+
+$('#confessEditBtn').addEventListener('click', ()=>{
+  $('#confessEditor').style.display='block';
+  $('#confessView').style.display='none';
+  $('#confessInput').value = ($('#confessText').innerText || '').trim();
+  $('#confessCount').textContent = `${$('#confessInput').value.length} ký tự`;
+});
+
+$('#confessCancelBtn').addEventListener('click', ()=>{
+  $('#confessEditor').style.display='none';
+  $('#confessView').style.display='block';
+});
+
+$('#confessInput').addEventListener('input', (e)=>{
+  $('#confessCount').textContent = `${e.target.value.length} ký tự`;
+});
+
+$('#confessSaveBtn').addEventListener('click', ()=>{
+  const txt = $('#confessInput').value.trim();
+  const obj = { text: txt, date: new Date().toISOString().slice(0,10) };
+  localStorage.setItem('confession', JSON.stringify(obj));
+  $('#confessEditor').style.display='none';
+  $('#confessView').style.display='block';
+  loadConfess();
+});
+
+$('#confessShareBtn').addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText($('#confessText').innerText || '');
+    alert('Đã sao chép lời tỏ tình 💌');
+  }catch{
+    alert('Không sao chép được, bạn copy thủ công giúp nha.');
+  }
+});
+
+
+
+  // // ===== Music =====
+  // const bgm = document.getElementById('bgm');
+  // let playing = false;
+  // document.getElementById('btnMusic').addEventListener('click', async ()=>{
+  //   try{
+  //     if(!playing){ await bgm.play(); playing = true;  document.getElementById('btnMusic').textContent = '⏸️'; }
+  //     else        { bgm.pause();       playing = false; document.getElementById('btnMusic').textContent = '🎵'; }
+  //   }catch{ alert('Nhấn lần nữa để phát nhạc'); }
+  // });
+  // ===== Music (playlist + autoplay robust + remember) =====
+const bgm = document.getElementById('bgm');
+const btnMusic = document.getElementById('btnMusic');
+const selTrack = document.getElementById('trackSelect'); // có thì dùng, không có cũng ok
+
+// Danh sách bài (đặt đúng tên file trong thư mục /music)
+const tracks = [
+  'music/lofi1.mp3'
+];
+
+let playing = false;
+let current = 0;
+let shuffle = JSON.parse(localStorage.getItem('bgmShuffle') || 'false'); // boolean
+
+function setBtn(on){ btnMusic.textContent = on ? '⏸️' : '🎵'; }
+function fadeTo(vol=0.6, ms=1000){
+  const start = bgm.volume || 0;
+  const diff = vol - start;
+  const t0 = performance.now();
+  function step(t){
+    const k = Math.min(1, (t - t0)/ms);
+    bgm.volume = start + diff*k;
+    if(k < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function showNudge(){
+  if(document.querySelector('.music-nudge')) return;
+  const n = document.createElement('div');
+  n.className = 'music-nudge';
+  n.innerHTML = 'Nhạc đang tắt — <b>bấm 🎵 hoặc chạm bất kỳ để bật</b>';
+  document.body.appendChild(n);
+}
+function hideNudge(){
+  const n = document.querySelector('.music-nudge');
+  if(n) n.remove();
+}
+
+function loadTrack(i){
+  if(tracks.length === 0) return;
+  current = ((i % tracks.length) + tracks.length) % tracks.length;
+  bgm.src = tracks[current];
+  if(selTrack){ selTrack.value = tracks[current]; }
+  localStorage.setItem('bgmTrack', String(current));
+}
+
+async function tryPlay(){
+  try{
+    bgm.volume = 0;
+    await bgm.play();                 // có thể bị chặn autoplay
+    playing = true; setBtn(true); fadeTo(0.6);
+    localStorage.setItem('bgmPref','on');
+    hideNudge();
+  }catch(e){
+    // nếu nguồn lỗi và có nhiều bài → thử bài kế
+    if(bgm.error && tracks.length > 1){
+      loadTrack(current + 1);
+      try { await tryPlay(); return; } catch {}
+    }
+    showNudge();
+    throw e;
+  }
+}
+
+function nextIndex(){
+  if(!shuffle) return (current + 1) % tracks.length;
+  if(tracks.length <= 1) return current;
+  let idx;
+  do { idx = Math.floor(Math.random()*tracks.length); } while(idx === current);
+  return idx;
+}
+async function nextTrack(){
+  loadTrack(nextIndex());
+  if(playing) await tryPlay();
+}
+async function prevTrack(){
+  loadTrack(current - 1);
+  if(playing) await tryPlay();
+}
+
+// Dropdown chọn bài (nếu có)
+if(selTrack){
+  selTrack.addEventListener('change', async ()=>{
+    const idx = tracks.findIndex(u => u === selTrack.value);
+    loadTrack(idx >= 0 ? idx : 0);
+    if(playing) await tryPlay();
+  });
+}
+
+// Auto-next khi bài kết thúc hoặc lỗi
+bgm.addEventListener('ended', nextTrack);
+bgm.addEventListener('error', nextTrack);
+
+// Autoplay NGAY khi vào trang (nếu bị chặn thì chờ cử chỉ đầu tiên rồi phát)
+window.addEventListener('load', ()=>{
+  const savedIdx = Number(localStorage.getItem('bgmTrack'));
+  if(!Number.isNaN(savedIdx) && tracks[savedIdx]) loadTrack(savedIdx);
+  else loadTrack(0);
+
+  tryPlay().catch(()=> attachUnlockOnce());
+});
+
+// Cho phép phát sau cử chỉ đầu tiên nếu bị chặn
+function attachUnlockOnce(){
+  const unlock = async ()=>{
+    window.removeEventListener('pointerdown', unlock);
+    window.removeEventListener('keydown', unlock);
+    window.removeEventListener('wheel', unlock, true);
+    window.removeEventListener('touchstart', unlock, {capture:true});
+    try { await tryPlay(); } catch {}
+  };
+  window.addEventListener('pointerdown', unlock, {once:true, passive:true});
+  window.addEventListener('keydown',     unlock, {once:true});
+  window.addEventListener('wheel',       unlock, {once:true, capture:true});
+  window.addEventListener('touchstart',  unlock, {once:true, passive:true, capture:true});
+}
+
+// Toggle nút 🎵
+btnMusic.addEventListener('click', async ()=>{
+  try{
+    if(!playing){ await tryPlay(); }
+    else{
+      bgm.pause(); playing = false; setBtn(false);
+      localStorage.setItem('bgmPref','off'); showNudge();
+    }
+  }catch{}
+});
+
+/* --- (tuỳ chọn) phím tắt: ← quay lại, → kế tiếp --- */
+window.addEventListener('keydown', (e)=>{
+  if(e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+  if(e.key === 'ArrowRight'){ nextTrack(); }
+  if(e.key === 'ArrowLeft'){  prevTrack(); }
+});
+
+/* ===== 🎬 Video Moment (drop-in) =====
+ * - Mặc định phát: video/love.mp4
+ * - Lưu link vào localStorage (LS_KEY)
+ * - Nhúng YouTube/Vimeo tự động (iframe), mp4/webm dùng <video>
+ * - Chọn file từ máy xem ngay (blob, không lưu)
+ */
+(function(){
+  const LS_KEY   = 'coupleVideoUrl';
+  const DEFAULT  = 'video/love.mp4'; // -> bỏ file vào thư mục /video cùng cấp index.html
+
+  // helpers lấy element (dựa trên $ sẵn có của bạn)
+  const els = {
+    inner:   document.getElementById('videoInner'),
+    url:     document.getElementById('videoUrl'),
+    save:    document.getElementById('saveVideoUrl'),
+    file:    document.getElementById('videoFile'),
+    clear:   document.getElementById('clearVideo'),
+    caption: document.getElementById('videoCaption')
+  };
+
+  function isYouTube(u){ return /(youtube\.com|youtu\.be)/i.test(u); }
+  function isVimeo(u){   return /vimeo\.com/i.test(u); }
+
+  function showError(msg){
+    if(els.caption) els.caption.textContent = msg || 'Không tải được video. Kiểm tra lại đường dẫn (vd: video/love.mp4).';
+  }
+
+  function mountIframe(src){
+    els.inner.innerHTML = '';
+    const ifr = document.createElement('iframe');
+    ifr.allow = 'autoplay; fullscreen; picture-in-picture';
+    ifr.referrerPolicy = 'no-referrer';
+    ifr.loading = 'lazy';
+    ifr.src = isYouTube(src)
+      ? src.replace('watch?v=','embed/').replace('/shorts/','/embed/') + '?rel=0'
+      : 'https://player.vimeo.com/video/' + src.split('/').pop();
+    els.inner.appendChild(ifr);
+  }
+
+  function mountVideo(src){
+    els.inner.innerHTML = '';
+    const v = document.createElement('video');
+    v.controls = true; v.playsInline = true; v.preload = 'metadata';
+    v.src = src;
+    v.addEventListener('error', ()=> showError());
+    els.inner.appendChild(v);
+  }
+
+  function setFromURL(raw){
+    const url = (raw||'').trim();
+    if(!url){ showError(); return; }
+    if(els.url) els.url.value = url;
+    if(isYouTube(url) || isVimeo(url)) mountIframe(url);
+    else mountVideo(url);
+  }
+
+  function save(url){ localStorage.setItem(LS_KEY, url); }
+
+  function loadInitial(){
+    const saved = localStorage.getItem(LS_KEY) || DEFAULT;
+    save(saved);
+    setFromURL(saved);
+    if(els.caption && saved === DEFAULT){
+      els.caption.textContent = 'Một đoạn phim nhỏ lưu lại kỷ niệm của hai đứa 💙';
+    }
+  }
+
+  // === Events ===
+  if(els.save){
+    els.save.addEventListener('click', ()=>{
+      const url = (els.url && els.url.value.trim()) || '';
+      if(!url) return alert('Nhập đường dẫn video trước nhé.');
+      save(url); setFromURL(url); alert('Đã lưu!');
+    });
+  }
+
+  if(els.file){
+    els.file.addEventListener('change', (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      const blobUrl = URL.createObjectURL(f); // xem ngay (không lưu)
+      setFromURL(blobUrl);
+      if(els.url) els.url.value = '';         // không lưu blob vào localStorage
+      if(els.caption) els.caption.textContent = f.name;
+    });
+  }
+
+  if(els.clear){
+    els.clear.addEventListener('click', ()=>{
+      localStorage.removeItem(LS_KEY);
+      save(DEFAULT);
+      setFromURL(DEFAULT);
+      if(els.caption) els.caption.textContent = 'Một đoạn phim nhỏ lưu lại kỷ niệm của hai đứa 💙';
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', loadInitial);
+})();
+
+
+
+
+  // ===== Init =====
+  document.getElementById('year').textContent = new Date().getFullYear();
+  renderStories();
+  renderTimeline();
+  loadConfess(); 
+</script>
+
+
+<canvas id="bgCanvas"></canvas>
+<script type="module">
+/* ===== Falling BG Module (hearts / cherry / snow) ===== */
+class FallingBG {
+  constructor({type='hearts', max=70, spawn=0.05, guttersOnly=true}={}){
+    this.type = type; this.max = max; this.spawn = spawn; this.guttersOnly = guttersOnly;
+    this.canvas = document.getElementById('bgCanvas') || (()=>{const c=document.createElement('canvas');c.id='bgCanvas';document.body.appendChild(c);return c;})();
+    this.ctx = this.canvas.getContext('2d');
+    this.W=0; this.H=0; this.items=[]; this.gLeft=120; this.gRight=120;
+    this.resize = this.resize.bind(this); this.tick = this.tick.bind(this);
+    window.addEventListener('resize', this.resize, {passive:true});
+    this.resize(); requestAnimationFrame(this.tick);
+  }
+  resize(){
+    this.W = this.canvas.width = innerWidth;
+    this.H = this.canvas.height = innerHeight;
+    // tính gutter theo .container
+    const ctn = document.querySelector('.container');
+    if(ctn){
+      const r = ctn.getBoundingClientRect();
+      this.gLeft  = Math.max(0, r.left);
+      this.gRight = Math.max(0, this.W - r.right);
+    }else{
+      const ideal = (this.W - Math.min(1200, this.W*0.92))/2;
+      this.gLeft = this.gRight = Math.max(0, ideal);
+    }
+  }
+  rx(){
+    if(!this.guttersOnly) return Math.random()*this.W;
+    return (Math.random()<0.5)
+      ? Math.random()*this.gLeft
+      : this.W - this.gRight + Math.random()*this.gRight;
+  }
+  newItem(){
+    const base = {
+      x:this.rx(), y:-10,
+      vy:0.6+Math.random()*1.4, vx:(Math.random()-0.5)*0.4,
+      rot:Math.random()*Math.PI*2, vr:(Math.random()-0.5)*0.02,
+      a:0.55+Math.random()*0.4
+    };
+    if(this.type==='snow'){
+      return {...base, size:3+Math.random()*3, color:'#fff'};
+    }
+    if(this.type==='cherry'){
+      // cánh hoa anh đào
+      return {...base, size:10+Math.random()*12, color: (Math.random()<0.5?'#ffcfe1':'#ff9fc7')};
+    }
+    // hearts mặc định
+    return {...base, size:8+Math.random()*12, color:(Math.random()<0.5?'#ff6fa8':'#ffb3c6')};
+  }
+  draw(item){
+    const ctx = this.ctx;
+    ctx.save(); ctx.translate(item.x,item.y); ctx.rotate(item.rot); ctx.globalAlpha=item.a;
+    if(this.type==='snow'){
+      ctx.beginPath(); ctx.arc(0,0,item.size/2,0,Math.PI*2); ctx.fillStyle=item.color; ctx.fill();
+    } else if(this.type==='cherry'){
+      // cánh hoa ellipse + nhị
+      ctx.scale(item.size/14, item.size/14);
+      ctx.beginPath(); // cánh 1
+      ctx.ellipse(-3,0,6,10,Math.PI/6,0,Math.PI*2);
+      ctx.fillStyle=item.color; ctx.fill();
+      ctx.beginPath(); // cánh 2
+      ctx.ellipse(3,0,6,10,-Math.PI/6,0,Math.PI*2);
+      ctx.fill();
+      ctx.beginPath(); // nhị
+      ctx.globalAlpha = item.a*0.8;
+      ctx.arc(0,0,1.6,0,Math.PI*2); ctx.fillStyle='#ffd6e6'; ctx.fill();
+    } else {
+      // heart
+      const s=item.size/20; ctx.scale(s,s);
+      ctx.beginPath(); ctx.moveTo(0,0);
+      ctx.bezierCurveTo(-10,-10,-20,10,0,20);
+      ctx.bezierCurveTo(20,10,10,-10,0,0);
+      ctx.fillStyle=item.color; ctx.fill();
+    }
+    ctx.restore();
+  }
+  keepInGutters(item){
+    if(!this.guttersOnly) return;
+    const leftEnd=this.gLeft, rightBeg=this.W-this.gRight;
+    if(item.x>leftEnd && item.x<rightBeg){
+      item.x += (item.x<this.W/2 ? -0.35 : 0.35); // kéo nhẹ về mép
+    }
+  }
+  tick(){
+    const ctx=this.ctx; ctx.clearRect(0,0,this.W,this.H);
+    if(this.items.length<this.max && Math.random()<this.spawn) this.items.push(this.newItem());
+    for(let i=this.items.length-1;i>=0;i--){
+      const it=this.items[i];
+      it.y+=it.vy; it.x+=it.vx; it.rot+=it.vr;
+      this.keepInGutters(it); this.draw(it);
+      if(it.y>this.H+30) this.items.splice(i,1);
+    }
+    requestAnimationFrame(this.tick);
+  }
+}
+
+/* ==== Khởi tạo: chọn kiểu hiệu ứng ở đây ==== */
+window.addEventListener('load', ()=>{
+  // type: 'hearts' | 'cherry' | 'snow'
+  new FallingBG({ type: 'hearts', max: 80, spawn: 0.05, guttersOnly: true });
+});
+</script>
+
+
+</body>
+</html>
