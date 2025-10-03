@@ -551,23 +551,49 @@
     localStorage.setItem('coupleStories', JSON.stringify(withId));
   }
 
-  // Nạp dữ liệu từ /data/stories.json lần đầu nếu localStorage đang trống
-async function bootstrapFromJSONOnce() {
-  if (getData().length) return; // đã có dữ liệu local thì bỏ qua
-  try {
-    const res = await fetch('data/stories.json', { cache: 'no-store' });
-    if (!res.ok) return;
-    const arr = await res.json();
-    if (Array.isArray(arr) && arr.length) {
-      setData(arr);
-      renderStories(); renderTimeline(); renderManager?.();
-      console.log('Seeded from data/stories.json');
-    }
-  } catch (e) {
-    console.warn('Cannot bootstrap stories.json:', e);
+    // ===== Confession storage helpers =====
+  function getConfession(){
+    const raw = localStorage.getItem('confession');
+    try { return raw ? JSON.parse(raw) : null; } catch { return null; }
   }
-}
-window.addEventListener('load', bootstrapFromJSONOnce);
+  function setConfession(obj){
+    if (obj && typeof obj === 'object') {
+      localStorage.setItem('confession', JSON.stringify({
+        text: String(obj.text || '').trim(),
+        date: obj.date || new Date().toISOString().slice(0,10)
+      }));
+    }
+  }
+
+
+  // Nạp dữ liệu từ /data/stories.json lần đầu nếu localStorage đang trống
+  // Nạp dữ liệu từ /data/stories.json lần đầu nếu localStorage đang trống
+  async function bootstrapFromJSONOnce() {
+    // Chỉ bootstrap khi CHƯA có stories; confession có/không đều nạp được
+    if (getData().length) return;
+    try {
+      const res = await fetch('data/stories.json', { cache: 'no-store' });
+      if (!res.ok) return;
+      const payload = await res.json();
+
+      // Hỗ trợ 2 định dạng:
+      // 1) Legacy: [...stories]
+      // 2) Mới:    { stories: [...], confession: {text, date} }
+      if (Array.isArray(payload)) {
+        setData(payload); // CHỈ stories
+      } else if (payload && typeof payload === 'object') {
+        if (Array.isArray(payload.stories)) setData(payload.stories);
+        if (payload.confession) setConfession(payload.confession); // Lời tỏ tình RIÊNG
+      }
+
+      renderStories(); renderTimeline(); renderManager?.(); loadConfess?.();
+      console.log('Seeded from data/stories.json');
+    } catch (e) {
+      console.warn('Cannot bootstrap stories.json:', e);
+    }
+  }
+  window.addEventListener('load', bootstrapFromJSONOnce);
+
 
 
   // ===== Render: Stories Grid =====
@@ -761,6 +787,7 @@ window.addEventListener('load', bootstrapFromJSONOnce);
   });
 
   // ===== Export / Import JSON =====
+  // ===== Export / Import JSON (stories + confession) =====
 function downloadJSON(data, filename) {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -771,21 +798,28 @@ function downloadJSON(data, filename) {
 }
 
 // Tạo tên file theo thời gian
-function makeFilename(prefix='couple-stories'){
+function makeFilename(prefix='couple-full'){
   const d = new Date();
   const pad = n => String(n).padStart(2,'0');
   const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
   return `${prefix}-${stamp}.json`;
 }
 
-// Xuất JSON
+// ==== Xuất JSON (gồm stories + confession) ====
 document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const data = getData();
-  if(!data.length){ alert('Album đang trống, không có gì để xuất.'); return; }
-  downloadJSON(data, makeFilename());
+  const stories = getData();
+  const confession = getConfession();
+  if(!stories.length && !confession){
+    alert('Chưa có dữ liệu để xuất.');
+    return;
+  }
+  const payload = { stories, confession: confession || null };
+  downloadJSON(payload, makeFilename());
 });
 
-// Nhập JSON (mặc định hỏi Replace hay Merge)
+// ==== Nhập JSON (hỗ trợ 2 định dạng) ====
+// - Legacy: [...stories]
+// - Mới:    { stories: [...], confession: {text, date} }
 document.getElementById('importBtn').addEventListener('click', ()=>{
   document.getElementById('importFile').value = '';
   document.getElementById('importFile').click();
@@ -797,31 +831,63 @@ document.getElementById('importFile').addEventListener('change', async (e)=>{
 
   try{
     const text = await file.text();
-    const arr = JSON.parse(text);
+    const payload = JSON.parse(text);
 
-    if(!Array.isArray(arr)) throw new Error('File JSON không đúng định dạng (không phải mảng).');
+    // Chuẩn hoá stories
+    function cleanStories(arr){
+      if(!Array.isArray(arr)) return [];
+      return arr.map((it, i) => {
+        if(!it || typeof it !== 'object') throw new Error(`Phần tử thứ ${i+1} không hợp lệ.`);
+        const { title, date, image, story } = it;
+        if(!title || !date || !image || !story)
+          throw new Error(`Thiếu field ở phần tử thứ ${i+1} (cần: title, date, image, story).`);
+        return {
+          _seed: !!it._seed,
+          id: it.id || (Math.random().toString(36).slice(2)+Date.now().toString(36)),
+          title, date, image, story
+        };
+      });
+    }
 
-    // Validate sơ bộ và gán id nếu thiếu
-    const cleaned = arr.map((it, i) => {
-      if(!it || typeof it !== 'object') throw new Error(`Phần tử thứ ${i+1} không hợp lệ.`);
-      const { title, date, image, story } = it;
-      if(!title || !date || !image || !story)
-        throw new Error(`Thiếu field ở phần tử thứ ${i+1} (cần: title, date, image, story).`);
-      return { _seed: !!it._seed, id: it.id || (Math.random().toString(36).slice(2)+Date.now().toString(36)), title, date, image, story };
-    });
+    let incomingStories = [];
+    let incomingConfess = null;
 
-    const modeReplace = confirm('Nhập JSON:\nOK = GHI ĐÈ album hiện tại (Replace)\nCancel = GỘP vào album (Merge)');
+    if (Array.isArray(payload)) {
+      // legacy
+      incomingStories = cleanStories(payload);
+    } else if (payload && typeof payload === 'object') {
+      if ('stories' in payload) incomingStories = cleanStories(payload.stories || []);
+      if (payload.confession && typeof payload.confession === 'object') {
+        const t = String(payload.confession.text || '');
+        const d = payload.confession.date || new Date().toISOString().slice(0,10);
+        incomingConfess = { text: t, date: d };
+      }
+    } else {
+      throw new Error('File JSON không đúng định dạng.');
+    }
+
+    const modeReplace = confirm(
+      'Nhập JSON:\nOK = GHI ĐÈ album hiện tại (Replace)\nCancel = GỘP album (Merge)\n' +
+      '(Lưu ý: "Lời tỏ tình" sẽ được thay thế nếu file có kèm dữ liệu)'
+    );
+
     if(modeReplace){
-      setData(cleaned);
+      // CHỈ dùng setData cho stories
+      setData(incomingStories);
+      // Lời tỏ tình dùng setConfession
+      if(incomingConfess) setConfession(incomingConfess);
     }else{
-      // Merge theo id; nếu JSON không có id, coi như item mới
+      // Merge stories theo id
       const now = getData();
       const map = new Map(now.map(x => [x.id, x]));
-      cleaned.forEach(x => map.set(x.id, x)); // overwrite by id
+      incomingStories.forEach(x => map.set(x.id, x));
       setData([...map.values()]);
+      // Confession: nếu file có → ghi đè; nếu không có → giữ nguyên
+      if(incomingConfess) setConfession(incomingConfess);
     }
 
     renderStories(); renderTimeline(); renderManager();
+    loadConfess();
     alert('Nhập dữ liệu thành công!');
   }catch(err){
     console.error(err);
@@ -829,18 +895,19 @@ document.getElementById('importFile').addEventListener('change', async (e)=>{
   }
 });
 
-  // === Confession: load / edit / save ===
-function loadConfess(){
-  const raw = localStorage.getItem('confession');
-  if(!raw){
-    $('#confessText').textContent = 'Chưa có lời nào… bấm “Chỉnh sửa” để viết nha.';
-    $('#confessDate').textContent = '';
-    return;
+
+    // === Confession: load / edit / save ===
+  function loadConfess(){
+    const raw = localStorage.getItem('confession');
+    if(!raw){
+      $('#confessText').textContent = 'Chưa có lời nào… bấm “Chỉnh sửa” để viết nha.';
+      $('#confessDate').textContent = '';
+      return;
+    }
+    const obj = JSON.parse(raw);
+    $('#confessText').innerHTML = (obj.text || '').replace(/\n/g,'<br>');
+    // $('#confessDate').textContent = obj.date ? `Cập nhật: ${formatDate(obj.date)}` : '';
   }
-  const obj = JSON.parse(raw);
-  $('#confessText').innerHTML = (obj.text || '').replace(/\n/g,'<br>');
-  // $('#confessDate').textContent = obj.date ? `Cập nhật: ${formatDate(obj.date)}` : '';
-}
 
 $('#confessEditBtn').addEventListener('click', ()=>{
   $('#confessEditor').style.display='block';
