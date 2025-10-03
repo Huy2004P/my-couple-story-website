@@ -39,7 +39,34 @@
     .brand .dot{ width:10px; height:10px; border-radius:50%; background:linear-gradient(120deg,var(--accent),var(--accent-2)) }
     .brand h1{ font-size:18px; margin:0; font-weight:700; letter-spacing:.5px }
     .nav a{ opacity:.85 }
-    .nav .menu{ display:flex; gap:18px }
+    /* --- Header nav: cuộn ngang trên mobile, không xuống dòng --- */
+    .nav .menu{
+      display:flex;
+      gap:14px;
+      overflow-x:auto;             /* cuộn ngang */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;       /* ẩn scrollbar (Firefox) */
+    }
+    .nav .menu::-webkit-scrollbar{ display:none; }  /* ẩn scrollbar (WebKit) */
+
+    /* các nút trong header: KHÔNG xuống dòng */
+    .nav .menu .btn{
+      white-space: nowrap;         /* ép 1 dòng */
+      min-height: 40px;            /* hơi thấp hơn cho gọn */
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+
+    /* Optional: tạo hiệu ứng mờ 2 mép thanh menu */
+    header .nav{
+      position: relative;
+      mask-image: linear-gradient( to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+      -webkit-mask-image: linear-gradient( to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+    }
+
+    
+
+    /* .nav .menu{ display:flex; gap:18px } */
     /* .btn{ border:1px solid rgba(255,255,255,.14); padding:8px 14px; border-radius:999px; display:inline-flex; gap:8px; align-items:center } */
     .btn{
       display: inline-flex;
@@ -286,9 +313,17 @@
 
     /* ---------- Responsive ---------- */
 
+    /* Thu nhỏ brand trên màn hình hẹp để đỡ chiếm chỗ */
+    @media (max-width: 480px){
+      .brand h1{ font-size:16px; }
+      .nav{ padding:10px 0; }
+      .nav .menu{ gap:10px; }
+      .nav .menu .btn{ font-size:13.5px; padding:7px 11px; min-height:38px; }
+    }
+
     @media (max-width: 720px){
-  .video-controls{ grid-template-columns: 1fr 1fr; }
-}
+    .video-controls{ grid-template-columns: 1fr 1fr; }
+    }
     /* Mobile tối ưu lưới nút */
     @media (max-width: 640px){
       .panel .actions{
