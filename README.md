@@ -59,31 +59,12 @@
 ## ⚠️ Hạn chế hiện tại | Current Limitations
 
 🇻🇳  
-- Chưa thể **thêm kỷ niệm trực tiếp từ giao diện web**.  
 - Dữ liệu **chỉ hiển thị từ file JSON** đã chỉnh sửa và commit trên web (GitHub) rồi tải lại.  
 - **Không có backend/ đăng nhập**, mọi nội dung hiển thị là công khai (nếu deploy công khai).
 
 🇬🇧  
-- **No in-browser create/edit** yet; stories are **read-only** from a JSON file.  
 - Content must be **manually edited and committed** to JSON on the web (GitHub) and then reloaded.  
 - **No backend/auth**: all displayed content is public when deployed publicly.
-
----
-
-**Gợi ý chỉnh sửa nhanh | Quick Edits**
-- Nội dung: `/data/stories.json`  
-- CSS chủ đạo: `/assets/css/style.css`  
-- Script tải & render JSON: `/assets/js/app.js`  
-- Ảnh: `/assets/images/stories/…` (đặt tên không dấu, không khoảng trắng)
-
----
-
-## 🧭 Tùy biến nội dung | How to Customize
-
-- **Thêm kỷ niệm**: Bổ sung một object mới vào `stories.json` (title, date, location, photos[], content).  
-- **Ảnh**: Tải ảnh vào `/assets/images/stories/` và tham chiếu đúng đường dẫn trong JSON.  
-- **Giao diện**: Điều chỉnh màu/ font/ layout trong `style.css`.  
-- **Hiệu ứng**: Bật/ tắt animation nền (tuyết/ hoa/ tim) trong `app.js` bằng cờ cấu hình.
 
 ---
 
